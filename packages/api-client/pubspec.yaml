@@ -1,0 +1,14 @@
+name: api_client
+description: 跨端共享 API 客户端（与 backend-service proto 对接）。由 tooling/codegen/buf.gen.yaml 自动生成。
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  grpc: ^3.2.4
+  protobuf: ^3.1.0
+
+dev_dependencies:
+  very_good_analysis: ^6.0.0

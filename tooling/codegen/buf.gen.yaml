@@ -1,0 +1,26 @@
+# buf.gen.yaml
+#
+# 跨端 proto 客户端生成配置。
+# 输出到 packages/api-client/ 下的 Dart 和 TypeScript 目录。
+#
+# 使用方法：
+#   ./tool/gen_clients.sh
+#
+# ⚠️ 不要手动运行 buf generate；统一通过脚本调用，确保路径解析一致。
+
+version: v1
+plugins:
+  # === Dart（Flutter 应用）===
+  - plugin: buf.build/protocolbuffers/dart
+    out: ../../packages/api-client/lib
+    opt: file_extension=pb.dart
+  - plugin: buf.build/grpc/dart:v1
+    out: ../../packages/api-client/lib
+
+  # === TypeScript（React Native / uni-app）===
+  - plugin: buf.build/protocolbuffers/js
+    out: ../../packages/api-client/src/proto
+    opt: import_suffix=pb.js
+  - plugin: buf.build/grpc/web
+    out: ../../packages/api-client/src/proto
+    opt: mode=grpcweb

@@ -1,0 +1,31 @@
+name: avmc_mobile_desktop
+
+packages:
+  - apps/**
+  - packages/*
+
+command:
+  bootstrap:
+    runPubGetInParallel: true
+    usePubspecOverrides: true
+
+scripts:
+  analyze:
+    description: Run flutter analyze in all packages.
+    run: melos exec -c 1 -- "flutter analyze"
+
+  test:
+    description: Run flutter test in all packages.
+    run: melos exec -c 1 -- "flutter test"
+
+  format:
+    description: Run dart format in all packages.
+    run: melos exec -c 1 -- "dart format ."
+
+  build:mobile:
+    description: Build mobile artifacts (APK / IPA).
+    run: melos exec -c 1 --scope="*-mobile" -- "flutter build apk --release"
+
+  build:desktop:
+    description: Build desktop artifacts.
+    run: melos exec -c 1 --scope="*-desktop" -- "flutter build macos --release"

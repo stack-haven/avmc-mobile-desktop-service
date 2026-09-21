@@ -1,0 +1,25 @@
+{
+  "name": "avmc-mobile-desktop-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ark Tech Platform 多端应用承载层 monorepo。",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "pnpm -r --parallel run lint",
+    "test": "pnpm -r --parallel run test",
+    "typecheck": "pnpm -r --parallel run typecheck",
+    "format": "pnpm -r --parallel run format"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

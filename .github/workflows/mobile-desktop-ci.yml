@@ -1,0 +1,56 @@
+# GitHub Actions CI for mobile-desktop-service
+# 详细配置参考 tooling/ci/README.md
+
+name: mobile-desktop-service CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      flutter: ${{ steps.filter.outputs.flutter }}
+      react_native: ${{ steps.filter.outputs.react_native }}
+      uniapp: ${{ steps.filter.outputs.uniapp }}
+      tokens: ${{ steps.filter.outputs.tokens }}
+      proto: ${{ steps.filter.outputs.proto }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            flutter:
+              - 'apps/evie-*/**'
+              - 'packages/*-flutter/**'
+              - 'melos.yaml'
+            react_native:
+              - 'apps/workbench-*/**'
+              - 'packages/*-react/**'
+              - 'package.json'
+            uniapp:
+              - 'apps/geo-*/**'
+            tokens:
+              - 'packages/design-tokens/tokens.json'
+            proto:
+              - 'packages/api-client/**'
+              - 'tooling/codegen/**'
+
+  flutter-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.flutter == 'true'
+    uses: ./.github/workflows/_flutter-ci.yml
+
+  react-native-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.react_native == 'true'
+    uses: ./.github/workflows/_react-native-ci.yml
+
+  uniapp-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.uniapp == 'true'
+    uses: ./.github/workflows/_uniapp-ci.yml

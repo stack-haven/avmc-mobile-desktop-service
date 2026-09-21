@@ -1,0 +1,16 @@
+# buf-gen-dart.yaml
+#
+# 仅生成 Dart 客户端（用于 apps/evie-mobile、apps/evie-desktop）。
+# 与 buf.gen.yaml 的区别：buf.gen.yaml 同时生成 Dart + TS。
+#
+# 使用方法：
+#   buf generate --template tooling/codegen/buf-gen-dart.yaml \
+#     --output packages/api-client/lib
+
+version: v1
+plugins:
+  - plugin: buf.build/protocolbuffers/dart
+    out: ../../packages/api-client/lib
+    opt: file_extension=pb.dart
+  - plugin: buf.build/grpc/dart:v1
+    out: ../../packages/api-client/lib

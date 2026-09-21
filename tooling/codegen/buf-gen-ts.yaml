@@ -1,0 +1,16 @@
+# buf-gen-ts.yaml
+#
+# 仅生成 TypeScript 客户端（用于 apps/workbench-mobile、apps/geo-*）。
+#
+# 使用方法：
+#   buf generate --template tooling/codegen/buf-gen-ts.yaml \
+#     --output packages/api-client/src
+
+version: v1
+plugins:
+  - plugin: buf.build/protocolbuffers/js
+    out: ../../packages/api-client/src/proto
+    opt: import_suffix=pb.js
+  - plugin: buf.build/grpc/web
+    out: ../../packages/api-client/src/proto
+    opt: mode=grpcweb

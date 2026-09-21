@@ -1,0 +1,42 @@
+# Flutter / Dart
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/build/
+**/.idea/
+**/*.iml
+
+# Node.js
+**/node_modules/
+**/yarn-error.log
+**/npm-debug.log
+**/.pnpm-store/
+
+# uni-app
+**/unpackage/
+**/HBuilderX/
+
+# 生成代码
+packages/api-client/lib/**/*.pb.dart
+packages/api-client/lib/**/*.pbgrpc.dart
+packages/api-client/src/proto/
+packages/design-tokens/lib/theme.dart
+packages/design-tokens/src/theme.ts
+packages/design-tokens/src/theme.scss
+
+# 密钥
+**/*.env
+**/*.key
+**/*.pem
+
+# IDE
+**/.vscode/
+**/.idea/
+**/*.swp
+
+# 操作系统
+.DS_Store
+Thumbs.db

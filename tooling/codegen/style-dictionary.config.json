@@ -1,0 +1,35 @@
+{
+  "source": ["packages/design-tokens/tokens.json"],
+  "platforms": {
+    "dart": {
+      "transformGroup": "dart",
+      "buildPath": "packages/design-tokens/lib/",
+      "files": [
+        {
+          "destination": "theme.dart",
+          "format": "dart/flutter/class.dart"
+        }
+      ]
+    },
+    "ts": {
+      "transformGroup": "js",
+      "buildPath": "packages/design-tokens/src/",
+      "files": [
+        {
+          "destination": "theme.ts",
+          "format": "typescript/object"
+        }
+      ]
+    },
+    "scss": {
+      "transformGroup": "scss",
+      "buildPath": "packages/design-tokens/src/",
+      "files": [
+        {
+          "destination": "theme.scss",
+          "format": "scss/variables"
+        }
+      ]
+    }
+  }
+}
