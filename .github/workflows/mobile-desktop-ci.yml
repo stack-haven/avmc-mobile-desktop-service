@@ -5,9 +5,9 @@ name: mobile-desktop-service CI
 
 on:
   push:
-    branches: [main]
+    branches: [coding/ai]
   pull_request:
-    branches: [main]
+    branches: [coding/ai]
 
 jobs:
   detect-changes:
@@ -20,12 +20,13 @@ jobs:
       proto: ${{ steps.filter.outputs.proto }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             flutter:
               - 'apps/evie-*/**'
+              - 'apps/growth_companion/**'
               - 'packages/*-flutter/**'
               - 'melos.yaml'
             react_native:

@@ -1,0 +1,60 @@
+# _flutter-ci.yml
+#
+# Flutter 应用 CI（可重用工作流）
+# 触发条件：dorny/paths-filter 检测到 Flutter 应用改动
+# 引用方式：uses: ./.github/workflows/_flutter-ci.yml
+
+name: flutter-ci
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: 'Flutter 应用名（apps/<app>）'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  analyze:
+    name: flutter analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.24.5
+      - name: Install dependencies
+        run: |
+          if [ -n "${{ inputs.app }}" ]; then
+            cd "apps/${{ inputs.app }}"
+            flutter pub get
+          fi
+      - name: Analyze
+        run: |
+          if [ -n "${{ inputs.app }}" ]; then
+            cd "apps/${{ inputs.app }}"
+            flutter analyze --no-fatal-warnings --no-fatal-infos
+          else
+            # 全部 Flutter 应用
+            for app in apps/*/; do
+              if [ -f "$app/pubspec.yaml" ]; then
+                echo "=== Analyze $app ==="
+                (cd "$app" && flutter pub get && flutter analyze --no-fatal-warnings --no-fatal-infos)
+              fi
+            done
+          fi
+      - name: Test
+        run: |
+          if [ -n "${{ inputs.app }}" ]; then
+            cd "apps/${{ inputs.app }}"
+            flutter test
+          else
+            for app in apps/*/; do
+              if [ -f "$app/pubspec.yaml" ]; then
+                echo "=== Test $app ==="
+                (cd "$app" && flutter test)
+              fi
+            done
+          fi

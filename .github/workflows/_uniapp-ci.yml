@@ -1,0 +1,30 @@
+# _uniapp-ci.yml
+#
+# uni-app 应用 CI（可重用工作流）
+# 触发条件：dorny/paths-filter 检测到 uni-app 应用改动
+#
+# ⚠️ 此为占位工作流。avmc-uniapp-app skill 实战验证前，CI 配置保持骨架状态。
+# 详细使用见：.agents/skills/avmc-uniapp-app/SKILL.md
+
+name: uniapp-ci
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: 'uni-app 应用名（apps/<app>）'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  placeholder:
+    name: ⚠️ uni-app skill 待实战验证
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 检查 uni-app 应用
+        run: |
+          echo "⚠️ avmc-uniapp-app skill 实战验证前，CI 工作流仅作占位"
+          echo "TODO: 集成 HBuilderX CLI + ESLint + 小程序预览"
+          echo "详见 .agents/skills/avmc-uniapp-app/SKILL.md"
