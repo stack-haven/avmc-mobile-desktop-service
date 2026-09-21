@@ -20,9 +20,8 @@
 **/HBuilderX/
 
 # 生成代码
-packages/api-client/lib/**/*.pb.dart
-packages/api-client/lib/**/*.pbgrpc.dart
-packages/api-client/src/proto/
+packages/api-client/lib/
+packages/api-client/src/
 packages/design-tokens/lib/theme.dart
 packages/design-tokens/src/theme.ts
 packages/design-tokens/src/theme.scss

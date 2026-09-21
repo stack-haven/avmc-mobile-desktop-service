@@ -4,13 +4,33 @@
 # 与 buf.gen.yaml 的区别：buf.gen.yaml 同时生成 Dart + TS。
 #
 # 使用方法：
-#   buf generate --template tooling/codegen/buf-gen-dart.yaml \
-#     --output packages/api-client/lib
+#   ./tool/gen_clients.sh --scope dart
+#
+# 实现说明（v2 格式）：
+#   - 使用本地插件 protoc-gen-dart（protoc_plugin v25+ 同时生成 message + gRPC stub）
+#   - 安装：`dart pub global activate protoc_plugin`（详见 README）
+#   - 避免 BSR 官方 plugin `buf.build/protocolbuffers/dart`，因为它只生成 message，
+#     与本地 plugin 同时使用会冲突（重复生成 .pb.dart）
+#
+# 路径策略：
+#   - inputs.directory: .（必须在 proto 目录运行）
+#   - out 路径相对 proto/buf.yaml：../../packages/api-client/lib
+#   - 脚本 gen_clients.sh 会 cd 到 backend-service/proto 目录执行 buf generate
+#   - ⚠️ buf 1.64 坑：out 路径必须含 `..` 上级引用；单层相对路径会静默失败
 
-version: v1
+version: v2
+inputs:
+  - directory: .
+    paths:
+      - common
+      - platform/service/v1
+      - version/service/v1
+      - ai/service/v1
+      - evie/service/v1
+      - evie/tool/v1
 plugins:
-  - plugin: buf.build/protocolbuffers/dart
-    out: ../../packages/api-client/lib
-    opt: file_extension=pb.dart
-  - plugin: buf.build/grpc/dart:v1
-    out: ../../packages/api-client/lib
+  # === Message + gRPC stub（本地插件；protoc_plugin v25 集成）===
+  - local: protoc-gen-dart
+    out: ../../mobile-desktop-service/packages/api-client/lib
+    opt:
+      - grpc

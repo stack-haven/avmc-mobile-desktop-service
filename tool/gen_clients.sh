@@ -114,21 +114,26 @@ BEFORE_DART=$(find packages/api-client/lib -name "*.dart" 2>/dev/null | wc -l | 
 BEFORE_TS=$(find packages/api-client/src/proto -name "*.js" 2>/dev/null | wc -l | tr -d ' ')
 
 # 跑 buf generate
+# 记录 mobile-desktop-service 根目录的绝对路径（避免 cd 后路径丢失）
+ROOT_DIR="$(pwd)"
 cd "$PROTO_DIR"
+
+# 临时 config 放在 proto 目录下（buf 1.64 拒绝对路径/stdin，只接受相对当前目录）
+# ⚠️ macOS mktemp -t 输出绝对路径，所以用 $$.yaml 在当前目录创建
+TMP_CONFIG=".buf-gen-tmp-$$.yaml"
+cp "$ROOT_DIR/$CONFIG" "$TMP_CONFIG"
+trap "rm -f $TMP_CONFIG" EXIT
 
 # buf generate 需要 --template 和 --output
 case "$SCOPE" in
   dart)
-    buf generate --template "$(cd .. && pwd)/$CONFIG" \
-      --output "$(cd .. && pwd)/packages/api-client/lib" 2>&1
+    buf generate --template "$TMP_CONFIG" 2>&1
     ;;
   ts)
-    buf generate --template "$(cd .. && pwd)/$CONFIG" \
-      --output "$(cd .. && pwd)/packages/api-client/src" 2>&1
+    buf generate --template "$TMP_CONFIG" 2>&1
     ;;
   all)
-    # buf.gen.yaml 同时输出到多个目录（plugins 各自指定 out）
-    buf generate --template "$(cd .. && pwd)/$CONFIG" 2>&1
+    buf generate --template "$TMP_CONFIG" 2>&1
     ;;
 esac
 
