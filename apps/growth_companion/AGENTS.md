@@ -7,6 +7,17 @@
 >
 > All AI Coding Agents and human contributors must follow these rules unless a documented architectural decision explicitly overrides them.
 
+## 0. Document Hierarchy
+
+> 🟢 **avmc 对齐**：本文档是应用级（Flutter 专用）工程宪法。规则解析顺序为：
+>
+> 1. **根仓库**（最高）：`avmc/AGENTS.md`、`avmc/REVIEW.md`、`avmc/RULES.md`
+> 2. **仓库级**：`mobile-desktop-service/AGENTS.md`（多端 monorepo 通用规则）
+> 3. **应用级**（本文件）：Flutter 特定规则
+> 4. **ADR**（决策记录）：`mobile-desktop-service/docs/adr/`
+>
+> 低层级规则可**细化**高层级规则，但**不得违反**。本文件是 chatgpt 生成的 Flutter AI 编码工程宪法，与 avmc 平台的对齐差异在各章中以「🟢 avmc 对齐」注脚标出。
+
 ---
 
 # 1. Project Mission
@@ -28,6 +39,8 @@ The project must optimize for:
 > Product quality + engineering quality + maintainability + evolvability.
 
 Do not optimize only for short-term development speed.
+
+> 🟢 **avmc 对齐**：本项目是 `mobile-desktop-service` monorepo 下的首批落地应用。monorepo 定位、三栈共存策略、子仓库提交流程见 `../../../AGENTS.md`（仓库级）和 `../../../../docs/services/mobile-desktop/{README,SERVICE}.md`（服务资料）。
 
 ---
 
@@ -363,6 +376,13 @@ UI = f(State)
 The UI should react to state.
 
 Do not make Widgets the source of truth.
+
+> 🟢 **avmc 对齐**：本项目的 `avmc-flutter-app` skill（位于 `mobile-desktop-service/.agents/skills/avmc-flutter-app/`）提供脚本与模式选择：
+>
+> - **默认**：bloc + cubit（兼容 `very_good_cli` 生成器，零额外依赖）
+> - **可选**：Riverpod 2.x + freezed + riverpod_generator（需手动加依赖）
+>
+> **当前实现差异**：`growth_companion` 脚手架由 `very_good_cli` 生成，使用 **bloc**（cubit 模式）。如需迁移到 Riverpod，请创建 ADR 记录原因与计划。创建 feature 脚本：`bash tool/create_feature.sh <name> --state-management bloc|riverpod`。
 
 ---
 
@@ -941,6 +961,14 @@ Inspect:
 
 Do not immediately modify code.
 
+> 🟢 **avmc 对齐**：在检查「架构文档」时，按顺序读取：
+>
+> 1. 根仓库 `avmc/AGENTS.md`、`avmc/RULES.md`、`avmc/REVIEW.md`（平台总规则）
+> 2. 仓库级 `../../../AGENTS.md`（monorepo 通用规则）
+> 3. 本文件（应用级 Flutter 规则）
+> 4. 仓库级与根仓库的 `docs/architecture/`（架构总纲 + ADR）
+> 5. 仓库级 `.agents/skills/avmc-flutter-app/`（Flutter 专用 skill）
+
 ## Step 2 — Analyze
 
 Identify:
@@ -1404,6 +1432,8 @@ Production credentials
 Use environment/configuration mechanisms appropriate to the deployment environment.
 
 The application should follow least-privilege principles.
+
+> 🟢 **avmc 对齐**：本项目的鉴权由后端统一管理（`backend-service/pkg/auth`：JWT/OIDC 本地认证 + Casbin 鉴权 + Redis 会话），客户端**不存储**凭证、不重复实现认证逻辑。详细使用见 `../../../../docs/services/mobile-desktop/SERVICE.md` §五「网络层」与 avmc 根仓库 `AGENTS.md` §「技术栈」。
 
 ---
 
