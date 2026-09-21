@@ -35,6 +35,7 @@ packages/design-tokens/src/theme.scss
 **/.vscode/
 **/.idea/
 **/*.swp
+**/*.iml
 
 # 操作系统
 .DS_Store
