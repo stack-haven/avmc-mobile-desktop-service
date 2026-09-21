@@ -62,20 +62,23 @@ echo "    source:   packages/design-tokens/tokens.json"
 echo "    config:   tooling/codegen/style-dictionary.config.json"
 echo ""
 
-# 记录生成前的文件状态
-declare -A BEFORE_HASH
-for f in \
-  "packages/design-tokens/lib/theme.dart" \
-  "packages/design-tokens/src/theme.ts" \
-  "packages/design-tokens/src/theme.scss"; do
+# 记录生成前的文件状态（避免 bash 3.2 不支持关联数组，改为平行数组）
+BEFORE_HASH_FILES=(
+  "packages/design-tokens/lib/theme.dart"
+  "packages/design-tokens/src/theme.ts"
+  "packages/design-tokens/src/theme.scss"
+)
+BEFORE_HASH_VALUES=()
+for f in "${BEFORE_HASH_FILES[@]}"; do
   if [ -f "$f" ]; then
-    BEFORE_HASH[$f]=$(md5 -q "$f" 2>/dev/null || shasum -a 256 "$f" | awk '{print $1}')
+    BEFORE_HASH_VALUES+=( "$(md5 -q "$f" 2>/dev/null || shasum -a 256 "$f" | awk '{print $1}')" )
   else
-    BEFORE_HASH[$f]="(not exist)"
+    BEFORE_HASH_VALUES+=( "(not exist)" )
   fi
 done
 
 # 跑 style-dictionary
+# 删除残留的 declare -A（macOS bash 3.2 不支持关联数组）
 if [ "$CHECK_ONLY" = true ]; then
   # --check 模式：先生成到临时目录，对比
   TEMP_DIR=$(mktemp -d)
@@ -137,6 +140,7 @@ echo ""
 echo "==> Diff summary:"
 
 CHANGED=0
+i=0
 for f in \
   "packages/design-tokens/lib/theme.dart" \
   "packages/design-tokens/src/theme.ts" \
@@ -144,15 +148,17 @@ for f in \
   if [ ! -f "$f" ]; then
     echo "  (new)  $f"
     CHANGED=$((CHANGED + 1))
+    i=$((i + 1))
     continue
   fi
   AFTER=$(md5 -q "$f" 2>/dev/null || shasum -a 256 "$f" | awk '{print $1}')
-  if [ "${BEFORE_HASH[$f]:-(not exist)}" != "$AFTER" ]; then
+  if [ "${BEFORE_HASH_VALUES[$i]:-(not exist)}" != "$AFTER" ]; then
     echo "  (mod)  $f"
     CHANGED=$((CHANGED + 1))
   else
     echo "  (same) $f"
   fi
+  i=$((i + 1))
 done
 
 # 格式化生成的 Dart 文件

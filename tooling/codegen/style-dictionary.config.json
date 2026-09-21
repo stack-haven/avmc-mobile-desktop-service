@@ -2,12 +2,15 @@
   "source": ["packages/design-tokens/tokens.json"],
   "platforms": {
     "dart": {
-      "transformGroup": "dart",
+      "transformGroup": "flutter",
       "buildPath": "packages/design-tokens/lib/",
       "files": [
         {
           "destination": "theme.dart",
-          "format": "dart/flutter/class.dart"
+          "format": "flutter/class.dart",
+          "options": {
+            "className": "AppTheme"
+          }
         }
       ]
     },
@@ -17,7 +20,7 @@
       "files": [
         {
           "destination": "theme.ts",
-          "format": "typescript/object"
+          "format": "javascript/object"
         }
       ]
     },
